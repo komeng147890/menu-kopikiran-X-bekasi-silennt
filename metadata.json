@@ -1,0 +1,8 @@
+{
+  "name": "KOPIKIRAN X BEKASI SILENT",
+  "description": "Aplikasi Kasir POS, Manajemen Inventaris Bahan & Produk, dan Pembukuan Laporan Keuangan Otomatis untuk KOPIKIRAN X BEKASI SILENT.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
