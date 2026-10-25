@@ -1,0 +1,18 @@
+{
+  "name": "kopikiran-x-bekasi-silent",
+  "version": "1.0.0",
+  "description": "KOPIKIRAN X BEKASI SILENT - Buku Menu & Pemesanan WhatsApp",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "serve": "node server.js"
+  },
+  "keywords": [
+    "kopikiran",
+    "menu",
+    "whatsapp",
+    "cafe"
+  ],
+  "author": "Kopikiran",
+  "license": "ISC"
+}
