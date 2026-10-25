@@ -784,7 +784,7 @@
 
         <div class="field-group" style="grid-column: 1 / -1;">
           <label for="orderNotes">Catatan Khusus Barista / Dapur:</label>
-          <input type="text" id="orderNotes" class="form-control" placeholder="Contoh: Es dipisah, Mie pedas sedang, Gula sedikit" oninput="handleInfoChange()">
+          <input type="text" id="orderNotes" class="form-control" placeholder="Contoh: Es dipisah, Gula sedikit, Roti bakar agak garing" oninput="handleInfoChange()">
         </div>
       </div>
     </section>
@@ -793,17 +793,17 @@
     <div class="filter-wrapper">
       <div class="search-input-box">
         <span class="search-icon-symbol">🔍</span>
-        <input type="text" id="menuSearch" placeholder="Cari kopi, teh, mie banglades, nasi goreng..." oninput="handleSearch(this.value)">
+        <input type="text" id="menuSearch" placeholder="Cari kopi, teh, roti bakar, kentang..." oninput="handleSearch(this.value)">
       </div>
 
       <div class="category-pills-row">
-        <button class="cat-btn active" onclick="setCategory('all', this)">Semua Menu (10)</button>
+        <button class="cat-btn active" onclick="setCategory('all', this)">Semua Menu (8)</button>
         <button class="cat-btn" onclick="setCategory('Minuman', this)">🥤 Minuman (5)</button>
-        <button class="cat-btn" onclick="setCategory('Makanan', this)">🍽️ Makanan (5)</button>
+        <button class="cat-btn" onclick="setCategory('Makanan', this)">🍽️ Makanan (3)</button>
       </div>
     </div>
 
-    <!-- Product Grid (10 Official Menu Items) -->
+    <!-- Product Grid (8 Official Menu Items) -->
     <div class="menu-grid" id="menuCardsContainer">
       <!-- Populated dynamically by JavaScript -->
     </div>
@@ -877,7 +877,7 @@
   <div id="toastMsg">Menu ditambahkan ke pesanan</div>
 
   <script>
-    // 10 Official Products (Updated with Mie Banglades & Nasi Goreng @ Rp 15.000)
+    // 8 Official Products from Menu Photo
     const PRODUCTS = [
       {
         id: 1,
@@ -958,26 +958,6 @@
         badge: "Krispi",
         badgeType: "food",
         desc: "Kentang goreng gurih renyah dengan cocolan saus sambal lezat."
-      },
-      {
-        id: 9,
-        name: "Mie Banglades",
-        category: "Makanan",
-        price: 15000,
-        icon: "🍜",
-        badge: "Menu Baru",
-        badgeType: "new",
-        desc: "Mie bumbu khas Banglades gurih berempah dengan telur nikmat."
-      },
-      {
-        id: 10,
-        name: "Nasi Goreng",
-        category: "Makanan",
-        price: 15000,
-        icon: "🍳",
-        badge: "Menu Baru",
-        badgeType: "new",
-        desc: "Nasi goreng spesial wangi gurih dengan telur, sosis & kerupuk renyah."
       }
     ];
 
