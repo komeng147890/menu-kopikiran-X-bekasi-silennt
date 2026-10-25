@@ -45,12 +45,12 @@ class RoomDatabaseTest {
 
     @Test
     fun testProductAndInventoryIngredientFlow() = runBlocking {
-        // Test Product Entity
+        // Test Product Entity matching menu photo
         val product = ProductItem(
-            name = "Kopi Susu Bekasi Silent",
-            category = "Kopi",
-            price = 20000.0,
-            costPrice = 8000.0,
+            name = "Good Day Freeze",
+            category = "Minuman",
+            price = 10000.0,
+            costPrice = 4000.0,
             stock = 50,
             minStockAlert = 10
         )
@@ -58,7 +58,7 @@ class RoomDatabaseTest {
 
         val retrievedProduct = dao.getProductById(productId)
         assertNotNull(retrievedProduct)
-        assertEquals("Kopi Susu Bekasi Silent", retrievedProduct?.name)
+        assertEquals("Good Day Freeze", retrievedProduct?.name)
         assertEquals(50, retrievedProduct?.stock)
 
         // Adjust stock
@@ -68,18 +68,37 @@ class RoomDatabaseTest {
 
         // Test Raw Ingredient Entity
         val rawIngredient = RawIngredient(
-            name = "Biji Kopi Arabika Silent",
+            name = "Good Day Freeze (Sachet)",
             category = "Bahan Baku",
-            currentStock = 5000.0,
-            minStock = 1000.0,
-            unit = "gram",
-            costPerUnit = 250.0
+            currentStock = 100.0,
+            minStock = 20.0,
+            unit = "pcs",
+            costPerUnit = 2500.0
         )
         val rawId = dao.insertRawIngredient(rawIngredient)
         val retrievedRaw = dao.getRawIngredientById(rawId)
         assertNotNull(retrievedRaw)
-        assertEquals("Biji Kopi Arabika Silent", retrievedRaw?.name)
-        assertEquals(5000.0, retrievedRaw?.currentStock ?: 0.0, 0.01)
+        assertEquals("Good Day Freeze (Sachet)", retrievedRaw?.name)
+        assertEquals(100.0, retrievedRaw?.currentStock ?: 0.0, 0.01)
+    }
+
+    @Test
+    fun testDeleteObsoleteProductsRetention() = runBlocking {
+        // Insert official and old obsolete product
+        val validProduct = ProductItem(name = "Es Teh", category = "Minuman", price = 7000.0, costPrice = 2000.0, stock = 60)
+        val oldObsoleteProduct = ProductItem(name = "Kopi Susu Bekasi Silent", category = "Kopi", price = 20000.0, costPrice = 8000.0, stock = 20)
+        dao.insertProduct(validProduct)
+        dao.insertProduct(oldObsoleteProduct)
+
+        val allowedList = listOf(
+            "Es Teh", "Good Day Freeze", "Good Day Cappuccino", "Good Day Coklat Panas",
+            "Good Day Merah Panas", "Roti Bakar", "Mix Platter", "Kentang Goreng"
+        )
+        dao.deleteProductsNotIn(allowedList)
+
+        val allProducts = dao.getAllProducts().first()
+        assertEquals(1, allProducts.size)
+        assertEquals("Es Teh", allProducts[0].name)
     }
 
     @Test
@@ -90,11 +109,11 @@ class RoomDatabaseTest {
             customerName = "Dimas Surya",
             tableOrOrderType = "Dine In",
             paymentMethod = "QRIS",
-            subtotal = 40000.0,
+            subtotal = 20000.0,
             discount = 0.0,
             tax = 0.0,
-            total = 40000.0,
-            amountPaid = 40000.0,
+            total = 20000.0,
+            amountPaid = 20000.0,
             changeAmount = 0.0,
             status = "COMPLETED"
         )
@@ -104,12 +123,12 @@ class RoomDatabaseTest {
         val item1 = TransactionItemEntity(
             transactionId = txId,
             productId = 1L,
-            productName = "Kopi Susu Bekasi Silent",
+            productName = "Good Day Freeze",
             quantity = 2,
-            pricePerUnit = 20000.0,
-            costPerUnit = 8000.0,
-            subtotal = 40000.0,
-            notes = "Less sugar"
+            pricePerUnit = 10000.0,
+            costPerUnit = 4000.0,
+            subtotal = 20000.0,
+            notes = "Dingin"
         )
         dao.insertTransactionItems(listOf(item1))
 
@@ -118,7 +137,7 @@ class RoomDatabaseTest {
         assertNotNull(txWithItems)
         assertEquals("KPK-20261024-TEST", txWithItems?.transaction?.invoiceNumber)
         assertEquals(1, txWithItems?.items?.size)
-        assertEquals("Kopi Susu Bekasi Silent", txWithItems?.items?.first()?.productName)
+        assertEquals("Good Day Freeze", txWithItems?.items?.first()?.productName)
         assertEquals(2, txWithItems?.items?.first()?.quantity)
     }
 
@@ -126,26 +145,26 @@ class RoomDatabaseTest {
     fun testBookkeepingExpensesAndInventoryLogs() = runBlocking {
         // Test Expense Entity
         val expense = ExpenseEntity(
-            title = "Beli Susu Fresh Milk 10L",
+            title = "Beli Good Day Kopi & Coklat Grosir",
             category = "Bahan Baku",
-            amount = 180000.0,
+            amount = 320000.0,
             paymentMethod = "CASH",
-            notes = "Greenfields Pasteurisasi"
+            notes = "20 renceng varian Good Day"
         )
         dao.insertExpense(expense)
 
         val allExpenses = dao.getAllExpenses().first()
         assertEquals(1, allExpenses.size)
-        assertEquals("Beli Susu Fresh Milk 10L", allExpenses[0].title)
-        assertEquals(180000.0, allExpenses[0].amount, 0.01)
+        assertEquals("Beli Good Day Kopi & Coklat Grosir", allExpenses[0].title)
+        assertEquals(320000.0, allExpenses[0].amount, 0.01)
 
         // Test Inventory Log Entity
         val log = InventoryLogEntity(
-            itemName = "Kopi Susu Bekasi Silent",
+            itemName = "Roti Bakar",
             itemType = "PRODUK",
-            changeAmount = -2.0,
-            previousStock = 50.0,
-            newStock = 48.0,
+            changeAmount = -1.0,
+            previousStock = 35.0,
+            newStock = 34.0,
             reason = "Penjualan POS",
             notes = "KPK-20261024-001"
         )
@@ -154,6 +173,6 @@ class RoomDatabaseTest {
         val logs = dao.getRecentInventoryLogs().first()
         assertEquals(1, logs.size)
         assertEquals("Penjualan POS", logs[0].reason)
-        assertEquals(48.0, logs[0].newStock, 0.01)
+        assertEquals(34.0, logs[0].newStock, 0.01)
     }
 }

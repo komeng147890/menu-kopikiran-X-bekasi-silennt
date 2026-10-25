@@ -41,6 +41,15 @@ interface KopikiranDao {
     @Delete
     suspend fun deleteProduct(product: ProductItem)
 
+    @Query("DELETE FROM products WHERE name NOT IN (:allowedNames)")
+    suspend fun deleteProductsNotIn(allowedNames: List<String>)
+
+    @Query("SELECT * FROM products WHERE name = :name LIMIT 1")
+    suspend fun getProductByName(name: String): ProductItem?
+
+    @Query("DELETE FROM products")
+    suspend fun deleteAllProducts()
+
     @Query("UPDATE products SET stock = stock + :changeAmount WHERE id = :productId")
     suspend fun adjustProductStock(productId: Long, changeAmount: Int)
 

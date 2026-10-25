@@ -702,14 +702,14 @@ private fun AddEditProductDialog(
     onSave: (ProductItem) -> Unit
 ) {
     var name by remember { mutableStateOf(initialProduct?.name ?: "") }
-    var category by remember { mutableStateOf(initialProduct?.category ?: "Kopi") }
-    var priceText by remember { mutableStateOf(initialProduct?.price?.toInt()?.toString() ?: "20000") }
-    var costPriceText by remember { mutableStateOf(initialProduct?.costPrice?.toInt()?.toString() ?: "8000") }
+    var category by remember { mutableStateOf(initialProduct?.category ?: "Minuman") }
+    var priceText by remember { mutableStateOf(initialProduct?.price?.toInt()?.toString() ?: "10000") }
+    var costPriceText by remember { mutableStateOf(initialProduct?.costPrice?.toInt()?.toString() ?: "4000") }
     var stockText by remember { mutableStateOf(initialProduct?.stock?.toString() ?: "30") }
     var minStockText by remember { mutableStateOf(initialProduct?.minStockAlert?.toString() ?: "10") }
     var description by remember { mutableStateOf(initialProduct?.description ?: "") }
 
-    val categories = listOf("Kopi", "Non-Kopi", "Makanan", "Biji Kopi")
+    val categories = listOf("Minuman", "Makanan")
     var expandedCategory by remember { mutableStateOf(false) }
 
     AlertDialog(

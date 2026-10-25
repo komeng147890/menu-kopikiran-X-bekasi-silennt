@@ -32,7 +32,7 @@ fun Long.toShortDate(): String {
 data class ProductItem(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String,
-    val category: String, // Kopi, Non-Kopi, Makanan, Biji Kopi
+    val category: String, // Minuman, Makanan
     val price: Double,
     val costPrice: Double, // HPP (Harga Pokok Penjualan)
     val stock: Int,

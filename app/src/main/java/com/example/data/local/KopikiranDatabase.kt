@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
         ExpenseEntity::class,
         InventoryLogEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class KopikiranDatabase : RoomDatabase() {
@@ -40,8 +40,9 @@ abstract class KopikiranDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     KopikiranDatabase::class.java,
-                    "kopikiran_bekasi_db"
+                    "kopikiran_bekasi_v2_db"
                 )
+                    .fallbackToDestructiveMigration()
                     .addCallback(DatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
@@ -58,6 +59,15 @@ abstract class KopikiranDatabase : RoomDatabase() {
             INSTANCE?.let { database ->
                 scope.launch(Dispatchers.IO) {
                     populateInitialData(database.kopikiranDao())
+                }
+            }
+        }
+
+        override fun onOpen(db: SupportSQLiteDatabase) {
+            super.onOpen(db)
+            INSTANCE?.let { database ->
+                scope.launch(Dispatchers.IO) {
+                    pruneAndSyncOfficialMenu(database.kopikiranDao())
                 }
             }
         }
@@ -226,19 +236,19 @@ abstract class KopikiranDatabase : RoomDatabase() {
             val initialExpenses = listOf(
                 ExpenseEntity(
                     timestamp = now - (dayMillis * 3),
-                    title = "Beli Biji Kopi Arabika 5kg",
+                    title = "Beli Good Day Kopi & Coklat Grosir 20 Renceng",
                     category = "Bahan Baku",
-                    amount = 650000.0,
+                    amount = 320000.0,
                     paymentMethod = "TRANSFER",
-                    notes = "Restock supplier lokal Bandung"
+                    notes = "Restock supplier Good Day & Teh"
                 ),
                 ExpenseEntity(
                     timestamp = now - (dayMillis * 2),
-                    title = "Beli Susu Fresh Milk 20 Liter",
+                    title = "Beli Roti Tawar, Sosis & Kentang Beku 5kg",
                     category = "Bahan Baku",
-                    amount = 380000.0,
+                    amount = 280000.0,
                     paymentMethod = "CASH",
-                    notes = "Greenfields Pasteurisasi"
+                    notes = "Bahan baku makanan outlet"
                 ),
                 ExpenseEntity(
                     timestamp = now - dayMillis,
@@ -246,7 +256,7 @@ abstract class KopikiranDatabase : RoomDatabase() {
                     category = "Listrik & Air",
                     amount = 250000.0,
                     paymentMethod = "TRANSFER",
-                    notes = "Operasional mesin espresso & AC"
+                    notes = "Operasional AC, Wi-Fi & pemanas"
                 ),
                 ExpenseEntity(
                     timestamp = now - 7200000L,
@@ -344,15 +354,128 @@ abstract class KopikiranDatabase : RoomDatabase() {
             dao.insertInventoryLog(
                 InventoryLogEntity(
                     timestamp = now,
-                    itemName = "French Fries Truffle Herb",
+                    itemName = "Kentang Goreng",
                     itemType = "PRODUK",
                     changeAmount = -1.0,
-                    previousStock = 5.0,
-                    newStock = 4.0,
+                    previousStock = 30.0,
+                    newStock = 29.0,
                     reason = "Penjualan POS",
-                    notes = "Stok menipis, disarankan restock"
+                    notes = "Stok awal berkurang penjualan"
                 )
             )
+        }
+
+        private suspend fun pruneAndSyncOfficialMenu(dao: KopikiranDao) {
+            val allowedOfficialNames = listOf(
+                "Es Teh",
+                "Good Day Freeze",
+                "Good Day Cappuccino",
+                "Good Day Coklat Panas",
+                "Good Day Merah Panas",
+                "Roti Bakar",
+                "Mix Platter",
+                "Kentang Goreng"
+            )
+            // Delete any product that doesn't belong to the official photo menu
+            dao.deleteProductsNotIn(allowedOfficialNames)
+
+            // Ensure each official menu item exists
+            val officialProducts = listOf(
+                ProductItem(
+                    name = "Es Teh",
+                    category = "Minuman",
+                    price = 7000.0,
+                    costPrice = 2000.0,
+                    stock = 60,
+                    minStockAlert = 10,
+                    unit = "Porsi",
+                    description = "Es teh manis segar dingin pelepas dahaga"
+                ),
+                ProductItem(
+                    name = "Good Day Freeze",
+                    category = "Minuman",
+                    price = 10000.0,
+                    costPrice = 4000.0,
+                    stock = 50,
+                    minStockAlert = 10,
+                    unit = "Cup",
+                    description = "Kopi Good Day Freeze dingin dengan es kocok segar"
+                ),
+                ProductItem(
+                    name = "Good Day Cappuccino",
+                    category = "Minuman",
+                    price = 10000.0,
+                    costPrice = 4000.0,
+                    stock = 45,
+                    minStockAlert = 10,
+                    unit = "Cup",
+                    description = "Good Day Cappuccino creamy dengan taburan choco granule"
+                ),
+                ProductItem(
+                    name = "Good Day Coklat Panas",
+                    category = "Minuman",
+                    price = 8000.0,
+                    costPrice = 3500.0,
+                    stock = 40,
+                    minStockAlert = 10,
+                    unit = "Cup",
+                    description = "Minuman coklat Good Day hangat nikmat & manis pas"
+                ),
+                ProductItem(
+                    name = "Good Day Merah Panas",
+                    category = "Minuman",
+                    price = 8000.0,
+                    costPrice = 3000.0,
+                    stock = 40,
+                    minStockAlert = 10,
+                    unit = "Cup",
+                    description = "Kopi Good Day Merah (The Original) seduh panas mantap"
+                ),
+                ProductItem(
+                    name = "Roti Bakar",
+                    category = "Makanan",
+                    price = 5000.0,
+                    costPrice = 2500.0,
+                    stock = 35,
+                    minStockAlert = 5,
+                    unit = "Porsi",
+                    description = "Roti bakar renyah hangat dengan olesan manis gurih"
+                ),
+                ProductItem(
+                    name = "Mix Platter",
+                    category = "Makanan",
+                    price = 10000.0,
+                    costPrice = 5000.0,
+                    stock = 30,
+                    minStockAlert = 5,
+                    unit = "Porsi",
+                    description = "Kombinasi sosis, nugget & kentang goreng renyah"
+                ),
+                ProductItem(
+                    name = "Kentang Goreng",
+                    category = "Makanan",
+                    price = 5000.0,
+                    costPrice = 2500.0,
+                    stock = 30,
+                    minStockAlert = 5,
+                    unit = "Porsi",
+                    description = "Kentang goreng gurih renyah krispi dengan saus sambal"
+                )
+            )
+
+            for (official in officialProducts) {
+                val existing = dao.getProductByName(official.name)
+                if (existing == null) {
+                    dao.insertProduct(official)
+                } else {
+                    dao.updateProduct(existing.copy(
+                        category = official.category,
+                        price = official.price,
+                        costPrice = official.costPrice,
+                        description = official.description
+                    ))
+                }
+            }
         }
     }
 }

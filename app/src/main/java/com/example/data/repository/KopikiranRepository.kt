@@ -230,4 +230,116 @@ class KopikiranRepository(private val dao: KopikiranDao) {
             }
         }
     }
+
+    // Force sync to strictly keep the 8 items from the menu photo
+    suspend fun enforceExactPhotoMenu() {
+        val allowedOfficialNames = listOf(
+            "Es Teh",
+            "Good Day Freeze",
+            "Good Day Cappuccino",
+            "Good Day Coklat Panas",
+            "Good Day Merah Panas",
+            "Roti Bakar",
+            "Mix Platter",
+            "Kentang Goreng"
+        )
+        dao.deleteProductsNotIn(allowedOfficialNames)
+
+        val officialProducts = listOf(
+            ProductItem(
+                name = "Es Teh",
+                category = "Minuman",
+                price = 7000.0,
+                costPrice = 2000.0,
+                stock = 60,
+                minStockAlert = 10,
+                unit = "Porsi",
+                description = "Es teh manis segar dingin pelepas dahaga"
+            ),
+            ProductItem(
+                name = "Good Day Freeze",
+                category = "Minuman",
+                price = 10000.0,
+                costPrice = 4000.0,
+                stock = 50,
+                minStockAlert = 10,
+                unit = "Cup",
+                description = "Kopi Good Day Freeze dingin dengan es kocok segar"
+            ),
+            ProductItem(
+                name = "Good Day Cappuccino",
+                category = "Minuman",
+                price = 10000.0,
+                costPrice = 4000.0,
+                stock = 45,
+                minStockAlert = 10,
+                unit = "Cup",
+                description = "Good Day Cappuccino creamy dengan taburan choco granule"
+            ),
+            ProductItem(
+                name = "Good Day Coklat Panas",
+                category = "Minuman",
+                price = 8000.0,
+                costPrice = 3500.0,
+                stock = 40,
+                minStockAlert = 10,
+                unit = "Cup",
+                description = "Minuman coklat Good Day hangat nikmat & manis pas"
+            ),
+            ProductItem(
+                name = "Good Day Merah Panas",
+                category = "Minuman",
+                price = 8000.0,
+                costPrice = 3000.0,
+                stock = 40,
+                minStockAlert = 10,
+                unit = "Cup",
+                description = "Kopi Good Day Merah (The Original) seduh panas mantap"
+            ),
+            ProductItem(
+                name = "Roti Bakar",
+                category = "Makanan",
+                price = 5000.0,
+                costPrice = 2500.0,
+                stock = 35,
+                minStockAlert = 5,
+                unit = "Porsi",
+                description = "Roti bakar renyah hangat dengan olesan manis gurih"
+            ),
+            ProductItem(
+                name = "Mix Platter",
+                category = "Makanan",
+                price = 10000.0,
+                costPrice = 5000.0,
+                stock = 30,
+                minStockAlert = 5,
+                unit = "Porsi",
+                description = "Kombinasi sosis, nugget & kentang goreng renyah"
+            ),
+            ProductItem(
+                name = "Kentang Goreng",
+                category = "Makanan",
+                price = 5000.0,
+                costPrice = 2500.0,
+                stock = 30,
+                minStockAlert = 5,
+                unit = "Porsi",
+                description = "Kentang goreng gurih renyah krispi dengan saus sambal"
+            )
+        )
+
+        for (item in officialProducts) {
+            val existing = dao.getProductByName(item.name)
+            if (existing == null) {
+                dao.insertProduct(item)
+            } else {
+                dao.updateProduct(existing.copy(
+                    category = item.category,
+                    price = item.price,
+                    costPrice = item.costPrice,
+                    description = item.description
+                ))
+            }
+        }
+    }
 }

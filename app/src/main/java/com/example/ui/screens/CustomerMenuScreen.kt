@@ -444,7 +444,7 @@ private fun CustomerProductCard(
     onQuickOrder: () -> Unit
 ) {
     val isOutOfStock = product.stock <= 0
-    val isSignature = product.name.contains("Silent", ignoreCase = true) || product.name.contains("Kopikiran", ignoreCase = true)
+    val isSignature = product.name in listOf("Good Day Freeze", "Good Day Cappuccino", "Mix Platter", "Roti Bakar")
 
     Card(
         modifier = Modifier
@@ -658,8 +658,8 @@ private fun CustomerProductDetailDialog(
 
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
-                // Temperature Choice (if coffee or drink)
-                if (product.category == "Kopi" || product.category == "Non-Kopi") {
+                // Temperature Choice (if drink)
+                if (product.category.equals("Minuman", ignoreCase = true)) {
                     Text("Pilihan Suhu Minuman:", fontWeight = FontWeight.SemiBold, fontSize = 12.sp)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -687,7 +687,7 @@ private fun CustomerProductDetailDialog(
                     }
 
                     // Sugar Choice
-                    Text("Tingkat Manis (Gula Aren/Sirup):", fontWeight = FontWeight.SemiBold, fontSize = 12.sp)
+                    Text("Tingkat Manis (Gula / Susu):", fontWeight = FontWeight.SemiBold, fontSize = 12.sp)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -729,7 +729,7 @@ private fun CustomerProductDetailDialog(
             Button(
                 onClick = {
                     val fullNotesList = mutableListOf<String>()
-                    if (product.category == "Kopi" || product.category == "Non-Kopi") {
+                    if (product.category.equals("Minuman", ignoreCase = true)) {
                         fullNotesList.add(temperatureChoice)
                         fullNotesList.add("Gula: $sugarChoice")
                     }

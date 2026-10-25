@@ -69,6 +69,9 @@ class KopikiranViewModel(application: Application) : AndroidViewModel(applicatio
     init {
         val db = KopikiranDatabase.getDatabase(application, viewModelScope)
         repository = KopikiranRepository(db.kopikiranDao())
+        viewModelScope.launch {
+            repository.enforceExactPhotoMenu()
+        }
     }
 
     // --- NAVIGATION ---
