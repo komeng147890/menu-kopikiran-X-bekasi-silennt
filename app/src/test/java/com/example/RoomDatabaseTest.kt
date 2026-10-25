@@ -92,7 +92,7 @@ class RoomDatabaseTest {
 
         val allowedList = listOf(
             "Es Teh", "Good Day Freeze", "Good Day Cappuccino", "Good Day Coklat Panas",
-            "Good Day Merah Panas", "Roti Bakar", "Mix Platter", "Kentang Goreng"
+            "Good Day Merah Panas", "Roti Bakar", "Mix Platter", "French Fries"
         )
         dao.deleteProductsNotIn(allowedList)
 

@@ -141,7 +141,7 @@ abstract class KopikiranDatabase : RoomDatabase() {
                     description = "Kombinasi sosis, nugget & kentang goreng renyah"
                 ),
                 ProductItem(
-                    name = "Kentang Goreng",
+                    name = "French Fries",
                     category = "Makanan",
                     price = 5000.0,
                     costPrice = 2500.0,
@@ -354,7 +354,7 @@ abstract class KopikiranDatabase : RoomDatabase() {
             dao.insertInventoryLog(
                 InventoryLogEntity(
                     timestamp = now,
-                    itemName = "Kentang Goreng",
+                    itemName = "French Fries",
                     itemType = "PRODUK",
                     changeAmount = -1.0,
                     previousStock = 30.0,
@@ -366,6 +366,16 @@ abstract class KopikiranDatabase : RoomDatabase() {
         }
 
         private suspend fun pruneAndSyncOfficialMenu(dao: KopikiranDao) {
+            val oldKentang = dao.getProductByName("Kentang Goreng")
+            if (oldKentang != null) {
+                val existingFF = dao.getProductByName("French Fries")
+                if (existingFF == null) {
+                    dao.updateProduct(oldKentang.copy(name = "French Fries"))
+                } else {
+                    dao.deleteProduct(oldKentang)
+                }
+            }
+
             val allowedOfficialNames = listOf(
                 "Es Teh",
                 "Good Day Freeze",
@@ -374,7 +384,7 @@ abstract class KopikiranDatabase : RoomDatabase() {
                 "Good Day Merah Panas",
                 "Roti Bakar",
                 "Mix Platter",
-                "Kentang Goreng"
+                "French Fries"
             )
             // Delete any product that doesn't belong to the official photo menu
             dao.deleteProductsNotIn(allowedOfficialNames)
@@ -452,7 +462,7 @@ abstract class KopikiranDatabase : RoomDatabase() {
                     description = "Kombinasi sosis, nugget & kentang goreng renyah"
                 ),
                 ProductItem(
-                    name = "Kentang Goreng",
+                    name = "French Fries",
                     category = "Makanan",
                     price = 5000.0,
                     costPrice = 2500.0,

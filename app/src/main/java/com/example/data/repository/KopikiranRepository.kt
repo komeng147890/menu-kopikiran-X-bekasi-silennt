@@ -233,6 +233,16 @@ class KopikiranRepository(private val dao: KopikiranDao) {
 
     // Force sync to strictly keep the 8 items from the menu
     suspend fun enforceExactPhotoMenu() {
+        val oldKentang = dao.getProductByName("Kentang Goreng")
+        if (oldKentang != null) {
+            val existingFF = dao.getProductByName("French Fries")
+            if (existingFF == null) {
+                dao.updateProduct(oldKentang.copy(name = "French Fries"))
+            } else {
+                dao.deleteProduct(oldKentang)
+            }
+        }
+
         val allowedOfficialNames = listOf(
             "Es Teh",
             "Good Day Freeze",
@@ -241,7 +251,7 @@ class KopikiranRepository(private val dao: KopikiranDao) {
             "Good Day Merah Panas",
             "Roti Bakar",
             "Mix Platter",
-            "Kentang Goreng"
+            "French Fries"
         )
         dao.deleteProductsNotIn(allowedOfficialNames)
 
@@ -317,7 +327,7 @@ class KopikiranRepository(private val dao: KopikiranDao) {
                 description = "Kombinasi sosis, nugget & kentang goreng renyah"
             ),
             ProductItem(
-                name = "Kentang Goreng",
+                name = "French Fries",
                 category = "Makanan",
                 price = 5000.0,
                 costPrice = 2500.0,
