@@ -231,7 +231,7 @@ class KopikiranRepository(private val dao: KopikiranDao) {
         }
     }
 
-    // Force sync to strictly keep the 8 items from the menu photo
+    // Force sync to strictly keep the 10 items from the menu
     suspend fun enforceExactPhotoMenu() {
         val allowedOfficialNames = listOf(
             "Es Teh",
@@ -241,7 +241,9 @@ class KopikiranRepository(private val dao: KopikiranDao) {
             "Good Day Merah Panas",
             "Roti Bakar",
             "Mix Platter",
-            "Kentang Goreng"
+            "Kentang Goreng",
+            "Mie Banglades",
+            "Nasi Goreng"
         )
         dao.deleteProductsNotIn(allowedOfficialNames)
 
@@ -325,6 +327,26 @@ class KopikiranRepository(private val dao: KopikiranDao) {
                 minStockAlert = 5,
                 unit = "Porsi",
                 description = "Kentang goreng gurih renyah krispi dengan saus sambal"
+            ),
+            ProductItem(
+                name = "Mie Banglades",
+                category = "Makanan",
+                price = 15000.0,
+                costPrice = 7000.0,
+                stock = 40,
+                minStockAlert = 5,
+                unit = "Porsi",
+                description = "Mie bumbu khas Banglades gurih berempah dengan telur nikmat"
+            ),
+            ProductItem(
+                name = "Nasi Goreng",
+                category = "Makanan",
+                price = 15000.0,
+                costPrice = 7000.0,
+                stock = 40,
+                minStockAlert = 5,
+                unit = "Porsi",
+                description = "Nasi goreng spesial wangi gurih dengan telur, sosis & kerupuk"
             )
         )
 
