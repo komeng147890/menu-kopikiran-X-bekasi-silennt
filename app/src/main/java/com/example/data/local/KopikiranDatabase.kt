@@ -131,20 +131,10 @@ abstract class KopikiranDatabase : RoomDatabase() {
                     description = "Roti bakar renyah hangat dengan olesan manis gurih"
                 ),
                 ProductItem(
-                    name = "Mix Platter",
-                    category = "Makanan",
-                    price = 10000.0,
-                    costPrice = 5000.0,
-                    stock = 30,
-                    minStockAlert = 5,
-                    unit = "Porsi",
-                    description = "Kombinasi sosis, nugget & kentang goreng renyah"
-                ),
-                ProductItem(
                     name = "French Fries",
                     category = "Makanan",
-                    price = 5000.0,
-                    costPrice = 2500.0,
+                    price = 10000.0,
+                    costPrice = 4500.0,
                     stock = 30,
                     minStockAlert = 5,
                     unit = "Porsi",
@@ -210,14 +200,6 @@ abstract class KopikiranDatabase : RoomDatabase() {
                     minStock = 800.0,
                     unit = "gram",
                     costPerUnit = 45.0
-                ),
-                RawIngredient(
-                    name = "Bahan Mix Platter (Sosis/Nugget)",
-                    category = "Bahan Baku",
-                    currentStock = 30.0,
-                    minStock = 6.0,
-                    unit = "porsi",
-                    costPerUnit = 4000.0
                 ),
                 RawIngredient(
                     name = "Cup Plastik 12oz & Sedotan",
@@ -341,12 +323,12 @@ abstract class KopikiranDatabase : RoomDatabase() {
                 TransactionItemEntity(
                     transactionId = tx2Id,
                     productId = 7,
-                    productName = "Mix Platter",
+                    productName = "French Fries",
                     quantity = 1,
                     pricePerUnit = 10000.0,
-                    costPerUnit = 5000.0,
+                    costPerUnit = 4500.0,
                     subtotal = 10000.0,
-                    notes = "Pedas manis"
+                    notes = "Garing & saus sambal"
                 )
             ))
 
@@ -383,7 +365,6 @@ abstract class KopikiranDatabase : RoomDatabase() {
                 "Good Day Coklat Panas",
                 "Good Day Merah Panas",
                 "Roti Bakar",
-                "Mix Platter",
                 "French Fries"
             )
             // Delete any product that doesn't belong to the official photo menu
@@ -452,20 +433,10 @@ abstract class KopikiranDatabase : RoomDatabase() {
                     description = "Roti bakar renyah hangat dengan olesan manis gurih"
                 ),
                 ProductItem(
-                    name = "Mix Platter",
-                    category = "Makanan",
-                    price = 10000.0,
-                    costPrice = 5000.0,
-                    stock = 30,
-                    minStockAlert = 5,
-                    unit = "Porsi",
-                    description = "Kombinasi sosis, nugget & kentang goreng renyah"
-                ),
-                ProductItem(
                     name = "French Fries",
                     category = "Makanan",
-                    price = 5000.0,
-                    costPrice = 2500.0,
+                    price = 10000.0,
+                    costPrice = 4500.0,
                     stock = 30,
                     minStockAlert = 5,
                     unit = "Porsi",

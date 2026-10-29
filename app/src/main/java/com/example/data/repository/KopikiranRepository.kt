@@ -250,7 +250,6 @@ class KopikiranRepository(private val dao: KopikiranDao) {
             "Good Day Coklat Panas",
             "Good Day Merah Panas",
             "Roti Bakar",
-            "Mix Platter",
             "French Fries"
         )
         dao.deleteProductsNotIn(allowedOfficialNames)
@@ -317,20 +316,10 @@ class KopikiranRepository(private val dao: KopikiranDao) {
                 description = "Roti bakar renyah hangat dengan olesan manis gurih"
             ),
             ProductItem(
-                name = "Mix Platter",
-                category = "Makanan",
-                price = 10000.0,
-                costPrice = 5000.0,
-                stock = 30,
-                minStockAlert = 5,
-                unit = "Porsi",
-                description = "Kombinasi sosis, nugget & kentang goreng renyah"
-            ),
-            ProductItem(
                 name = "French Fries",
                 category = "Makanan",
-                price = 5000.0,
-                costPrice = 2500.0,
+                price = 10000.0,
+                costPrice = 4500.0,
                 stock = 30,
                 minStockAlert = 5,
                 unit = "Porsi",

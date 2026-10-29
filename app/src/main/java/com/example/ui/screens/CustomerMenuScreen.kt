@@ -444,7 +444,7 @@ private fun CustomerProductCard(
     onQuickOrder: () -> Unit
 ) {
     val isOutOfStock = product.stock <= 0
-    val isSignature = product.name in listOf("Good Day Freeze", "Good Day Cappuccino", "Mix Platter", "Roti Bakar")
+    val isSignature = product.name in listOf("Good Day Freeze", "Good Day Cappuccino", "French Fries", "Roti Bakar")
 
     Card(
         modifier = Modifier
